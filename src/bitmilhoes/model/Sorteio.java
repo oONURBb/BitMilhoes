@@ -1,8 +1,11 @@
 package bitmilhoes.model;
 
+import bitmilhoes.containers.ContainerList;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import bitmilhoes.containers.IContainerOperations;
+import java.util.Iterator;
 
 
 
@@ -57,7 +60,7 @@ public class Sorteio implements ISorteio {
     /**
      * Cont�m as apostas realizadas para o presente sorteio.
      */
-    private List<Aposta> lances;
+    private IContainerOperations<Aposta> lances;
     private Chave chaveVencedora;
 
 
@@ -80,19 +83,20 @@ public class Sorteio implements ISorteio {
     }
 
     @Override
-    public Chave efectuarSorteio(List<Integer> nums, List<Integer> ests) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
     public LocalDateTime getDataSorteio() {
         return dataSorteio;
     }
 
     @Override
-    public List<Aposta> getLances() {
-        List<Aposta> lancesAUX = new ArrayList<>();
-        lancesAUX.addAll(lances);
+    public IContainerOperations<Aposta> getLances() {
+        IContainerOperations<Aposta> lancesAUX = new ContainerList<>();
+        Iterator it = lances.getIterador();
+        while(it.hasNext())
+        {
+            Aposta aux = (Aposta)it.next();
+            lancesAUX.insert(aux);
+        }
+        
         return lancesAUX;
     }
 
@@ -113,6 +117,11 @@ public class Sorteio implements ISorteio {
 
     @Override
     public boolean isRealizado() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Chave efectuarSorteio(IContainerOperations<Integer> nums, IContainerOperations<Integer> ests) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
         
