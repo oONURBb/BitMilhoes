@@ -86,12 +86,11 @@ public class Apostador implements IApostador{
 
     @Override
     public boolean alterarPin(short pinNovo, short pinActual) {
-        if(pinNovo == pinActual)
+        if((pinActual == this.pin) && (pinNovo != pinActual))
         {
-            pinActual = pinNovo;
+            this.pin = pinNovo;
             return true;
         }
-        
         return false;
     }
 
