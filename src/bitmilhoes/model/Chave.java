@@ -1,6 +1,9 @@
 package bitmilhoes.model;
 
+import bitmilhoes.containers.ContainerSet;
+import bitmilhoes.containers.IContainerOperations;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
@@ -14,47 +17,56 @@ import java.util.Random;
  */
 public class Chave {
 
-    private List<Integer> numeros;
-    private List<Integer> estrelas;
+    private IContainerOperations<Integer> numeros;
+    private IContainerOperations<Integer> estrelas;
 
     public Chave(){
-        this.numeros = new ArrayList<>();
-        this.estrelas = new ArrayList<>();
+        this.numeros = new ContainerSet<>();
+        this.estrelas = new ContainerSet<>();
     }
     
-    public Chave(List<Integer> numeros, List<Integer> estrelas) {  
+    public Chave(ContainerSet<Integer> numeros, ContainerSet<Integer> estrelas) {  
         this.numeros = numeros;
         this.estrelas = estrelas;
     }
 
-    public List<Integer> getNumeros()
+    public ContainerSet<Integer> getNumeros()
     {
-        return this.numeros;
+        ContainerSet<Integer> numerosAUX = new ContainerSet<>();
+        for (Iterator iterator = numeros.getIterador(); iterator.hasNext();) {
+            numerosAUX.insert((Integer)iterator.next());
+        }
+        return numerosAUX;
     }
 
-    public List<Integer> getEstrelas()
+    public ContainerSet<Integer> getEstrelas()
     {
-        return this.estrelas;
+        ContainerSet<Integer> estrelasAUX = new ContainerSet<>();
+        for (Iterator iterator = estrelas.getIterador(); iterator.hasNext();) {
+            estrelasAUX.insert((Integer)iterator.next());
+        }
+        return estrelasAUX;
     }
     
-    public void setNumeros(List<Integer> numeros)
+    public void setNumeros(ContainerSet<Integer> numeros)
     {
         this.numeros = numeros;
     }
     
-    public void setEstrelas(List<Integer> estrelas)
+    public void setEstrelas(ContainerSet<Integer> estrelas)
     {
         this.estrelas = estrelas;
     }
 
-    public static void gerarChave(List<Integer> nrs, int max, int nElem)
+    public static void gerarChave(ContainerSet<Integer> nrs, int max, int nElem)
     {
         Random rnd = new Random();
         do
         {
             int randomNum = rnd.nextInt(max) + 1;
-            if(!nrs.contains(randomNum))
-                nrs.add(randomNum);
+            if(nrs.getElement(randomNum) == null) {
+                nrs.insert(randomNum);
+            }
         }while(nrs.size() != nElem);
     }
 }
