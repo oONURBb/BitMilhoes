@@ -1,10 +1,15 @@
 package bitmilhoes.model;
 
+import bitmilhoes.containers.ContainerSet;
+import bitmilhoes.containers.IContainerOperations;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import javafx.collections.ObservableSet;
 
 
 /**
@@ -45,14 +50,14 @@ public class Apostador implements IApostador{
      */
     private float saldo;
     
-    private List<Movimento> movimentos;
-    private List<Aposta> apostas;
+    private IContainerOperations<Movimento> movimentos;
+    private IContainerOperations<Aposta> apostas;
 
     // NOVO
     public Apostador() {
         this(0, (short)0, "", LocalDate.now(), 0.0f);
-        this.movimentos = new ArrayList<>();
-        this.apostas = new ArrayList<>();
+        this.movimentos = new ContainerSet<>();
+        this.apostas = new ContainerSet<>();
     }
 
     // ALTERADO
@@ -76,9 +81,9 @@ public class Apostador implements IApostador{
 
     @Override
     public boolean debitar(float valor) {
-        if(valor >= 0 && valor > saldo)
+        if(valor >= 0 && this.saldo >= valor)
         {
-            saldo-=valor;
+            this.saldo-=valor;
             return true;
         }
         return false;
@@ -86,31 +91,39 @@ public class Apostador implements IApostador{
 
     @Override
     public boolean alterarPin(short pinNovo, short pinActual) {
-        if(pinNovo == pinActual)
+        if((pinNovo != pinActual) && (pinActual == this.pin))
         {
-            pinActual = pinNovo;
+            this.pin = pinNovo;
             return true;
         }
-        
         return false;
     }
 
     @Override
     public Aposta criarAposta(Chave chave) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Aposta ap = null;
+        if(chave != null && this.debitar(2)){
+            ap = new Aposta(this, chave);
+            apostas.insert(ap);
+        }
+        return ap;
     }
 
     @Override
-    public List<Aposta> getApostas() {
-        List<Aposta> apostasAUX = new LinkedList<>();
-        apostasAUX.addAll(apostas);
+    public ContainerSet<Aposta> getApostas() {
+        ContainerSet<Aposta> apostasAUX = new ContainerSet<>();
+        for (Iterator iterator = apostas.getIterador(); iterator.hasNext();) {
+            apostasAUX.insert((Aposta)iterator.next());
+        }
         return apostasAUX;
     }
 
     @Override
-    public List<Movimento> getMovimentos() {
-        List<Movimento> movimentosAUX = new LinkedList<>();
-        movimentosAUX.addAll(movimentos);
+    public ContainerSet<Movimento> getMovimentos() {
+        ContainerSet<Movimento> movimentosAUX = new ContainerSet<>();
+        for (Iterator iterator = movimentos.getIterador(); iterator.hasNext();) {
+            movimentosAUX.insert((Movimento)iterator.next());
+        }
         return movimentosAUX;
     }
 
