@@ -1,6 +1,9 @@
 package bitmilhoes.model;
 
+import bitmilhoes.containers.ContainerSet;
+import bitmilhoes.containers.IContainerOperations;
 import java.time.LocalDate;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -14,35 +17,73 @@ import java.util.List;
 public class GestorAposta implements IGestorAposta {
 
     private Sorteio sorteio;
-    private List<Apostador> apostadores;
+    private IContainerOperations<Apostador> apostadores;
     
-    public GestorAposta() {        
-
+    public GestorAposta() {
+        this.apostadores = new ContainerSet<>();
+        this.sorteio = new Sorteio();
     }
+
+    public GestorAposta(Sorteio sorteio, IContainerOperations<Apostador> apostadores) {
+        this.sorteio = sorteio;
+        this.apostadores = apostadores;
+    }
+
 
     @Override
     public boolean novoApostador(int telefone, short pin, String nome, LocalDate dataNascimento, float saldo) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Apostador ap = new Apostador(telefone, pin, nome, dataNascimento, saldo);
+        if(apostadores.getElement(ap) == null){
+            apostadores.insert(ap);
+            return true;
+        }
+        return false;
     }
 
     @Override
     public boolean alterarPin(int telefone, short pinActual, short pinNovo) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        for (Iterator iterator = apostadores.getIterador(); iterator.hasNext();) {
+            Apostador ap = (Apostador)iterator.next();
+            if(ap.getTelefone() == telefone && ap.alterarPin(pinNovo, pinActual))
+                return true;
+        }
+        return false;
     }
 
     @Override
     public boolean validaApostador(int telefone, short pinActual) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        for (Iterator iterator = apostadores.getIterador(); iterator.hasNext();) {
+            Apostador ap = (Apostador)iterator.next();
+            if(ap.getTelefone() == telefone && ap.getPin() == pinActual)
+                return true;
+        }
+        return false;
     }
 
     @Override
     public boolean creditarMontante(int telefone, short pin, float montante) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        for (Iterator iterator = apostadores.getIterador(); iterator.hasNext();) {
+            Apostador ap = (Apostador)iterator.next();
+            if(ap.getTelefone() == telefone && ap.getPin() == pin)
+            {
+                ap.creditar(montante);
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
     public boolean levantarMontante(int telefone, short pin, float montante) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        for (Iterator iterator = apostadores.getIterador(); iterator.hasNext();) {
+            Apostador ap = (Apostador)iterator.next();
+            if(ap.getTelefone() == telefone && ap.getPin() == pin)
+            {
+                ap.creditar(montante);
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
@@ -56,32 +97,32 @@ public class GestorAposta implements IGestorAposta {
     }
 
     @Override
-    public void apostaPersonalizada(int telefone, short pin, List<Integer> numeros, List<Integer> estrelas) {
+    public void apostaPersonalizada(int telefone, short pin, ContainerSet<Integer> numeros, ContainerSet<Integer> estrelas) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public List<Apostador> listarApostadoresNome() {
+    public ContainerSet<Apostador> listarApostadoresNome() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public List<Apostador> listarApostadoresDataNascimento() {
+    public ContainerSet<Apostador> listarApostadoresDataNascimento() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public List<Apostador> listarApostadoresSaldo() {
+    public ContainerSet<Apostador> listarApostadoresSaldo() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public List<Aposta> listarPremiosUltimoSorteio() {
+    public ContainerSet<Aposta> listarPremiosUltimoSorteio() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public List<Movimento> listarMovimentosApostador(int telefone, short pin) {
+    public ContainerSet<Movimento> listarMovimentosApostador(int telefone, short pin) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -96,7 +137,7 @@ public class GestorAposta implements IGestorAposta {
     }
 
     @Override
-    public Chave efectuarSorteio(List<Integer> nums, List<Integer> ests) {
+    public Chave efectuarSorteio(ContainerSet<Integer> nums, ContainerSet<Integer> ests) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -105,7 +146,7 @@ public class GestorAposta implements IGestorAposta {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    public List<Apostador> getApostadores() {
+    public ContainerSet<Apostador> getApostadores() {
             throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.    
     }
 
