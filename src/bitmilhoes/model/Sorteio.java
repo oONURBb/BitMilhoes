@@ -1,7 +1,10 @@
 package bitmilhoes.model;
 
+import bitmilhoes.containers.ContainerList;
+import bitmilhoes.containers.IContainerOperations;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 
@@ -57,7 +60,7 @@ public class Sorteio implements ISorteio {
     /**
      * Cont�m as apostas realizadas para o presente sorteio.
      */
-    private List<Aposta> lances;
+    private IContainerOperations<Aposta> lances;
     private Chave chaveVencedora;
 
 
@@ -66,39 +69,49 @@ public class Sorteio implements ISorteio {
     }
 
     public void inicializaSorteio(){                
-
+        this.chaveVencedora = new Chave();
+        this.realizado = false;
+        Chave.gerarChave(this.chaveVencedora.getEstrelas(), 11, 2);
+        Chave.gerarChave(this.chaveVencedora.getNumeros(), 50, 5);
+        this.primeiroPremio = new Premio();
+        this.primeiroPremio = PREMIOS[12];
     }
 
     @Override
     public boolean iniciarCicloApostas() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        this.lances = new ContainerList<>();
+        return true;
     }
 
     @Override
     public boolean validarChave(Chave chave) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return chave.getEstrelas().size() == 2 && chave.getNumeros().size() == 5;
     }
 
     @Override
     public Chave efectuarSorteio(List<Integer> nums, List<Integer> ests) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        for (Iterator<Aposta> iterator = this.lances.getIterador(); iterator.hasNext();) {
+                Aposta ap = iterator.next();
+                Chave chave = ap.getChave();
+              
+            }
+        return null;
     }
 
     @Override
     public LocalDateTime getDataSorteio() {
-        return dataSorteio;
+        return this.dataSorteio;
     }
 
     @Override
     public List<Aposta> getLances() {
-        List<Aposta> lancesAUX = new ArrayList<>();
-        lancesAUX.addAll(lances);
-        return lancesAUX;
+        return this.lances.getElements();
     }
 
     @Override
     public void registaAposta(Aposta aposta) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if(aposta != null && isRealizado() != true)
+            this.lances.insert(aposta);
     }
 
     @Override
@@ -113,7 +126,7 @@ public class Sorteio implements ISorteio {
 
     @Override
     public boolean isRealizado() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return this.realizado;
     }
         
 
