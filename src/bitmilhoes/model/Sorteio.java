@@ -101,7 +101,7 @@ public class Sorteio implements ISorteio {
 
     @Override
     public IContainerOperations<Aposta> getLances() {
-        return this.lances.getElements();
+        return (IContainerOperations<Aposta>)this.lances.getElements();
     }
 
     @Override
@@ -125,3 +125,4 @@ public class Sorteio implements ISorteio {
     public boolean isRealizado() {
         return this.realizado;
     }
+}
