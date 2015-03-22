@@ -1,13 +1,11 @@
 package bitmilhoes.model;
 
 import bitmilhoes.containers.ContainerList;
+import bitmilhoes.containers.IContainerOperations;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.List;
-import bitmilhoes.containers.IContainerOperations;
 import java.util.Iterator;
-
-
+import java.util.List;
 
 /**
  * @author ipoo
@@ -29,17 +27,17 @@ public class Sorteio implements ISorteio {
      * numeros e estrelas acertadas.
      */
     public static final Premio[] PREMIOS = {new Premio(1, 5, 2, 0.5000f),
-                                            new Premio(2, 5, 1, 0.2000f),
-                                            new Premio(3, 5, 0, 0.0800f),
-                                            new Premio(4, 4, 2, 0.0600f),
-                                            new Premio(5, 4, 1, 0.0500f),
-                                            new Premio(6, 4, 0, 0.0400f),
-                                            new Premio(7, 3, 2, 0.0300f),
-                                            new Premio(8, 3, 1, 0.0200f),
-                                            new Premio(9, 2, 2, 0.0100f),
-                                            new Premio(10, 3, 0, 0.0050f),
-                                            new Premio(11, 1, 2, 0.0030f),
-                                            new Premio(12, 2, 1, 0.0020f)};
+        new Premio(2, 5, 1, 0.2000f),
+        new Premio(3, 5, 0, 0.0800f),
+        new Premio(4, 4, 2, 0.0600f),
+        new Premio(5, 4, 1, 0.0500f),
+        new Premio(6, 4, 0, 0.0400f),
+        new Premio(7, 3, 2, 0.0300f),
+        new Premio(8, 3, 1, 0.0200f),
+        new Premio(9, 2, 2, 0.0100f),
+        new Premio(10, 3, 0, 0.0050f),
+        new Premio(11, 1, 2, 0.0030f),
+        new Premio(12, 2, 1, 0.0020f)};
     /**
      * Indica a data em que o sorteio foi realizado.
      */
@@ -53,8 +51,8 @@ public class Sorteio implements ISorteio {
      */
     private boolean realizado;
     /**
-     * Indica qual a combina��o de n�meros e estrelas correspondentes ao primeiro
-     * pr�mio atribu�do.
+     * Indica qual a combina��o de n�meros e estrelas correspondentes ao
+     * primeiro pr�mio atribu�do.
      */
     private Premio primeiroPremio;
     /**
@@ -63,46 +61,54 @@ public class Sorteio implements ISorteio {
     private IContainerOperations<Aposta> lances;
     private Chave chaveVencedora;
 
-
-    public Sorteio(){
+    public Sorteio() {
         inicializaSorteio();
     }
 
-    public void inicializaSorteio(){                
-        
+    public void inicializaSorteio() {
+        this.chaveVencedora = new Chave();
+        this.realizado = false;
+        Chave.gerarChave(this.chaveVencedora.getEstrelas(), 11, 2);
+        Chave.gerarChave(this.chaveVencedora.getNumeros(), 50, 5);
+        this.primeiroPremio = new Premio();
+        this.primeiroPremio = PREMIOS[12];
     }
 
     @Override
     public boolean iniciarCicloApostas() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        this.lances = new ContainerList<>();
+        return true;
     }
 
     @Override
     public boolean validarChave(Chave chave) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return chave.getEstrelas().size() == 2 && chave.getNumeros().size() == 5;
+    }
+
+    @Override
+    public Chave efectuarSorteio(IContainerOperations<Integer> nums, IContainerOperations<Integer> ests) {
+        for (Iterator<Aposta> iterator = this.lances.getIterador(); iterator.hasNext();) {
+            Aposta ap = iterator.next();
+            Chave chave = ap.getChave();
+        }
+        return null;
     }
 
     @Override
     public LocalDateTime getDataSorteio() {
-        return dataSorteio;
+        return this.dataSorteio;
     }
 
     @Override
     public IContainerOperations<Aposta> getLances() {
-        IContainerOperations<Aposta> lancesAUX = new ContainerList<>();
-        Iterator it = lances.getIterador();
-        while(it.hasNext())
-        {
-            Aposta aux = (Aposta)it.next();
-            lancesAUX.insert(aux);
-        }
-        
-        return lancesAUX;
+        return this.lances.getElements();
     }
 
     @Override
     public void registaAposta(Aposta aposta) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (aposta != null && isRealizado() != true) {
+            this.lances.insert(aposta);
+        }
     }
 
     @Override
@@ -117,14 +123,5 @@ public class Sorteio implements ISorteio {
 
     @Override
     public boolean isRealizado() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return this.realizado;
     }
-
-    @Override
-    public Chave efectuarSorteio(IContainerOperations<Integer> nums, IContainerOperations<Integer> ests) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-        
-
-
-}
