@@ -162,6 +162,14 @@ public class Apostador implements IApostador{
         return this.telefone;
     }
 
+    public LocalDate getDataNascimento() {
+        return dataNascimento;
+    }
+
+    public void setDataNascimento(LocalDate dataNascimento) {
+        this.dataNascimento = dataNascimento;
+    }
+
     @Override
     public int hashCode() {
         int hash = 3;
@@ -179,7 +187,7 @@ public class Apostador implements IApostador{
             return false;
         }
         final Apostador other = (Apostador) obj;
-        return this.telefone == other.telefone;
+            return this.telefone == other.telefone;
     }
 
     

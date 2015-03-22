@@ -69,7 +69,7 @@ public class Sorteio implements ISorteio {
     }
 
     public void inicializaSorteio(){                
-
+        
     }
 
     @Override

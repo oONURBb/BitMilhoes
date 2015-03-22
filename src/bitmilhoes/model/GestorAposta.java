@@ -3,6 +3,8 @@ package bitmilhoes.model;
 import bitmilhoes.containers.ContainerSet;
 import bitmilhoes.containers.IContainerOperations;
 import java.time.LocalDate;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
@@ -88,12 +90,25 @@ public class GestorAposta implements IGestorAposta {
 
     @Override
     public Apostador removerApostador(int telefone, short pin) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Apostador apostadorAUX = null;
+        
+        if(validaApostador(telefone, pin))
+        {
+           apostadorAUX = getApostador(telefone, pin);
+           return this.apostadores.remove(apostadorAUX);
+        }
+        return apostadorAUX;
     }
 
     @Override
     public void apostaAleatoria(int telefone, short pin) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Apostador apostadorAposta = null;
+        
+        if(validaApostador(telefone, pin))
+        {
+            apostadorAposta = getApostador(telefone, pin);
+            Aposta aposta = new Aposta(apostadorAposta, new Chave());
+        }
     }
 
     @Override
@@ -102,22 +117,28 @@ public class GestorAposta implements IGestorAposta {
     }
 
     @Override
-    public ContainerSet<Apostador> listarApostadoresNome() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public IContainerOperations<Apostador> listarApostadoresNome() {
+        IContainerOperations apostadoresNomes = this.apostadores;
+        Collections.sort(apostadoresNomes.getElements(), ApostadorNomeComparator);
+        return apostadoresNomes;
     }
 
     @Override
-    public ContainerSet<Apostador> listarApostadoresDataNascimento() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public IContainerOperations<Apostador> listarApostadoresDataNascimento() {
+        IContainerOperations apostadoresDataNascimento = this.apostadores;
+        Collections.sort(apostadoresDataNascimento.getElements(), ApostadorDataNascimentoComparator);
+        return apostadoresDataNascimento;
     }
 
     @Override
-    public ContainerSet<Apostador> listarApostadoresSaldo() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public IContainerOperations<Apostador> listarApostadoresSaldo() {
+        IContainerOperations apostadoresSaldo = this.apostadores;
+        Collections.sort(apostadoresSaldo.getElements(), ApostadorSaldoComparator);
+        return apostadoresSaldo;
     }
 
     @Override
-    public ContainerSet<Aposta> listarPremiosUltimoSorteio() {
+    public IContainerOperations<Aposta> listarPremiosUltimoSorteio() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -149,7 +170,46 @@ public class GestorAposta implements IGestorAposta {
     public ContainerSet<Apostador> getApostadores() {
             throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.    
     }
-
     
+    public Apostador getApostador(int telefone, short pinActual) {
+        Apostador ap = null;
+        
+        for (Iterator iterator = apostadores.getIterador(); iterator.hasNext();) {
+            Apostador apIt = (Apostador)iterator.next();
+            if(apIt.getTelefone() == telefone && apIt.getPin() == pinActual)
+            {
+                apIt = ap;
+                return ap;
+            }
+        }
+        return null;
+    }
+
+    /*Comparator para comparar os nomes dos Apostadores*/
+    public static Comparator<Apostador> ApostadorNomeComparator = new Comparator<Apostador>(){
+        @Override
+        public int compare(Apostador ap1, Apostador ap2) {
+           return (ap1.getNome().compareToIgnoreCase(ap2.getNome()));
+        }      
+    };
+    
+    /*Comparator utilizado para comparar todas as datas de nascimento da Class Apostador*/
+    public static Comparator<Apostador> ApostadorDataNascimentoComparator = new Comparator<Apostador>(){
+        @Override
+        public int compare(Apostador ap1, Apostador ap2) {
+            return (ap1.getDataNascimento().compareTo(ap2.getDataNascimento()));
+        }
+    };
+    
+    
+    /*Comparator utilizado para comparar o saldo de todos os Apostadores*/
+    public static Comparator<Apostador> ApostadorSaldoComparator = new Comparator<Apostador>(){
+
+        @Override
+        public int compare(Apostador ap1, Apostador ap2) {
+            return (ap1.getSaldo() < ap2.getSaldo()) ? 1 : 0;
+        }
+        
+    };
   
 }

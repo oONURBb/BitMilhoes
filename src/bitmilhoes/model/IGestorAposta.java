@@ -1,6 +1,7 @@
 package bitmilhoes.model;
 
 import bitmilhoes.containers.ContainerSet;
+import bitmilhoes.containers.IContainerOperations;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -104,21 +105,21 @@ public interface IGestorAposta {
      *
      * @return List<Apostador> retorna uma lista com os apostadores ordenados 
      */
-    public ContainerSet<Apostador> listarApostadoresNome();
+    public IContainerOperations<Apostador> listarApostadoresNome();
 
     /**
      * Lista os apostadores por data de nascimento 
      *
      * @return List<Apostador> retorna uma lista com os apostadores ordenados 
      */
-    public ContainerSet<Apostador> listarApostadoresDataNascimento();
+    public IContainerOperations<Apostador> listarApostadoresDataNascimento();
 
     /**
      * Lista os apostadores pelo seu saldo
      *
      * @return List<Apostador> retorna uma lista com os apostadores ordenados
      */
-    public ContainerSet<Apostador> listarApostadoresSaldo();
+    public IContainerOperations<Apostador> listarApostadoresSaldo();
 
     /**
      * Listar os premios atribuidos no ultimo sorteio, juntamente com as chaves
@@ -126,7 +127,7 @@ public interface IGestorAposta {
 	 *
 	 * @return List<Apostador> retorna uma lista com os apostadores ordenados
      */
-    public ContainerSet<Aposta> listarPremiosUltimoSorteio();
+    public IContainerOperations<Aposta> listarPremiosUltimoSorteio();
 
     /**
      * Lista os movimentos de um apostador por ordem crescente de data e decrescente
@@ -137,7 +138,7 @@ public interface IGestorAposta {
 	 *
 	 * @return List<Apostador> retorna uma lista com os apostadores ordenados
      */
-    public ContainerSet<Movimento> listarMovimentosApostador(int telefone, short pin);
+    public IContainerOperations<Movimento> listarMovimentosApostador(int telefone, short pin);
 
     /**
      * Reinicia o registo de apostas, eliminando todas as apostas registadas dos
