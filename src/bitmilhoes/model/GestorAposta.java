@@ -107,13 +107,18 @@ public class GestorAposta implements IGestorAposta {
         if(validaApostador(telefone, pin))
         {
             apostadorAposta = getApostador(telefone, pin);
-            Aposta aposta = new Aposta(apostadorAposta, new Chave());
+            apostadorAposta.criarAposta(new Chave());
         }
     }
 
     @Override
     public void apostaPersonalizada(int telefone, short pin, ContainerSet<Integer> numeros, ContainerSet<Integer> estrelas) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Apostador apostadorAux = null;
+        if(validaApostador(telefone, pin))
+        {
+            apostadorAux = getApostador(telefone, pin);
+            apostadorAux.criarAposta(new Chave(numeros, estrelas));
+        }
     }
 
     @Override
@@ -143,8 +148,10 @@ public class GestorAposta implements IGestorAposta {
     }
 
     @Override
-    public ContainerSet<Movimento> listarMovimentosApostador(int telefone, short pin) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public IContainerOperations<Movimento> listarMovimentosApostador(int telefone, short pin) {
+        IContainerOperations apostadoresMovimentos = this.apostadores;
+        Collections.sort(apostadoresMovimentos.getElements(), ApostadoresMovimentosComparator);
+        return apostadoresMovimentos;
     }
 
     @Override
@@ -210,6 +217,17 @@ public class GestorAposta implements IGestorAposta {
             return (ap1.getSaldo() < ap2.getSaldo()) ? 1 : 0;
         }
         
+    };
+    
+    // Comparator usado para comparar movimentos por ordem crescente de data e decrescente de valor
+    public static Comparator<Movimento> ApostadoresMovimentosComparator = new Comparator<Movimento>(){
+        @Override
+        public int compare(Movimento m1, Movimento m2) {
+            if(m1.getDataMovimento().toLocalDate().equals(m2.getDataMovimento().toLocalDate()))
+                return (m2.getValor() > m1.getValor()) ? 1 : 0;
+            else
+                return (m1.getDataMovimento().compareTo(m2.getDataMovimento()) != 0) ? 1 : 0; 
+        }  
     };
   
 }

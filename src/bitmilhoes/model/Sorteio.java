@@ -71,7 +71,7 @@ public class Sorteio implements ISorteio {
         Chave.gerarChave(this.chaveVencedora.getEstrelas(), 11, 2);
         Chave.gerarChave(this.chaveVencedora.getNumeros(), 50, 5);
         this.primeiroPremio = new Premio();
-        this.primeiroPremio = PREMIOS[12];
+        this.primeiroPremio = PREMIOS[1];
     }
 
     @Override
@@ -125,4 +125,5 @@ public class Sorteio implements ISorteio {
     public boolean isRealizado() {
         return this.realizado;
     }
+    
 }
